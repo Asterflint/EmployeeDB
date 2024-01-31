@@ -9,9 +9,6 @@ using EmployeeList_MVC.Models;
 using static EmployeeList_MVC.Helper;
 using EmployeeList_MVC;
 using EmployeeList_MVC.Data;
-using EmployeeList_MVC.Data;
-using EmployeeList_MVC;
-using static EmployeeList_MVC.Helper;
 
 namespace EmployeeList_MVC.Controllers
 {
@@ -24,91 +21,11 @@ namespace EmployeeList_MVC.Controllers
             _context = context;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Search(string searchQuery, int entriesPerPage)
-        {
-            
-            var employeesQuery = _context.Employees.AsQueryable();
-
-            if (searchQuery != "")
-            {
-                if (!string.IsNullOrEmpty(searchQuery))
-                {
-                    employeesQuery = employeesQuery.Where(e =>
-                        EF.Functions.Like(e.FirstName, $"%{searchQuery}%") ||
-                        EF.Functions.Like(e.LastName, $"%{searchQuery}%") ||
-                        EF.Functions.Like(e.Email, $"%{searchQuery}%"));
-                }
-            }
-
-            //var employees = await employeesQuery.Take(entriesPerPage).ToListAsync();
-            var employees = await employeesQuery.ToListAsync();
-
-            if (entriesPerPage > 0)
-            {
-                ViewData["EntriesPerPage"] = entriesPerPage;
-            }
-
-            int pg = 1;
-            if (pg < 1)
-            {
-                pg = 1;
-            }
-            int pageSize = entriesPerPage;
-            int recsCount = employees.Count;
-            var pager = new Pager(recsCount, pg, pageSize);
-            int recSkip = (pg - 1) * pageSize;
-            var data = employees.Skip(recSkip).Take(pager.PageSize).ToList();
-            this.ViewBag.Pager = pager;
-
-            // Store the entriesPerPage in ViewData for access in the view
-            ViewData["EntriesPerPage"] = entriesPerPage;
-
-            return View("_ViewAll", data);
-
-        }
-
-
-
-        //[HttpGet]
-        //public async Task<IActionResult> Search(string searchQuery, int entriesPerPage)
-        //{
-        //    var employeesQuery = _context.Employees.AsQueryable();
-
-        //    if (!string.IsNullOrEmpty(searchQuery))
-        //    {
-        //        employeesQuery = employeesQuery.Where(e =>
-        //            EF.Functions.Like(e.FirstName, $"%{searchQuery}%") ||
-        //            EF.Functions.Like(e.LastName, $"%{searchQuery}%") ||
-        //            EF.Functions.Like(e.Email, $"%{searchQuery}%")
-        //        );
-        //    }
-
-        //    var employees = await employeesQuery.Take(entriesPerPage).ToListAsync();
-
-        //    int pg = 1;
-        //    if (pg < 1)
-        //    {
-        //        pg = 1;
-        //    }
-        //    int pageSize = entriesPerPage;
-        //    int recsCount = employees.Count;
-        //    var pager = new Pager(recsCount, pg, pageSize);
-        //    int recSkip = (pg - 1) * pageSize;
-        //    var data = employees.Skip(recSkip).Take(pager.PageSize).ToList();
-        //    this.ViewBag.Pager = pager;
-
-        //    // Store the entriesPerPage in ViewData for access in the view
-        //    ViewData["EntriesPerPage"] = entriesPerPage;
-
-        //    return View("_ViewAll", data);
-
-        //    //return PartialView("_EmployeeSearchResults", data);
-        //}
-
-        // GET: Employee
         public async Task<IActionResult> Index(int pg = 1, int entriesPerPage = 5, string searchQuery = "")
         {
+            var jobTitles = _context.JobTitles.ToList();
+            ViewData["JobTitles"] = new SelectList(jobTitles, "ID", "JobTitleName");
+
             var employees = await _context.Employees.ToListAsync();
 
             // Apply search filter if searchQuery is provided
@@ -149,6 +66,9 @@ namespace EmployeeList_MVC.Controllers
         [NoDirectAccess]
         public async Task<IActionResult> AddOrEdit(int id = 0)
         {
+            var jobTitles = _context.JobTitles.ToList();
+            ViewData["JobTitles"] = new SelectList(jobTitles, "ID", "JobTitleName");
+
             // Store the entriesPerPage in ViewData for access in the view
             ViewData["EntriesPerPage"] = 5;
 
@@ -168,7 +88,7 @@ namespace EmployeeList_MVC.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddOrEdit(int id, [Bind("ID,NIK,FirstName,LastName,Email")] Employee EmployeeModel)
+        public async Task<IActionResult> AddOrEdit(int id, [Bind("ID,NIK,FirstName,LastName,Email,JobTitleID")] Employee EmployeeModel)
         {
             if (ModelState.IsValid)
             {

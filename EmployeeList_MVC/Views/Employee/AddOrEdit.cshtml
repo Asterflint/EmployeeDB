@@ -1,6 +1,8 @@
 ﻿@model EmployeeList_MVC.Models.Employee
 
-@{ Layout = null; }
+@{
+    Layout = null;
+}
 
 <div class="row">
     <div class="col-md-12">
@@ -36,6 +38,14 @@
                         <span asp-validation-for="Email" class="text-danger"></span>
                     </div>
                 </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="JobTitleID" class="control-label"></label>
+                        <select asp-for="JobTitleID" class="form-control" asp-items="ViewBag.JobTitles"></select>
+                        <span asp-validation-for="JobTitleID" class="text-danger"></span>
+                    </div>
+                </div>
+
             </div>
             <div class="form-group">
                 <div class="col-md-6 offset-md-3">
