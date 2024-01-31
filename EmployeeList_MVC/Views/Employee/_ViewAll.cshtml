@@ -1,6 +1,7 @@
 ﻿@model IEnumerable<EmployeeList_MVC.Models.Employee>
 
 @{
+
     ViewData["Title"] = "Index";
 
     Pager pager = new Pager();
@@ -12,6 +13,8 @@
         pager = ViewBag.Pager;
         pageNo = pager.CurrentPage;
     }
+
+
 }
 
 
@@ -19,22 +22,47 @@
 
     <h1 class="text-center"><i class="fas fa-comments-dollar text-success"></i> Employee History</h1>
 
+    <form id="searchForm" asp-controller="Employee" asp-action="Index" method="get">
+        <div class="form-group">
+            <label for="search">Search:</label>
+            <input type="text" class="form-control" id="search" name="searchQuery" placeholder="Search" value="@ViewData["SearchQuery"]">
+        </div>
+        <div class="form-group">
+            <label for="entriesPerPage">Entries per page:</label>
+            <select class="form-control" id="entriesPerPage" name="entriesPerPage" onchange="submitForm()">
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="20">20</option>
+            </select>
+        </div>
+        <input type="hidden" name="searchQuery" value="@ViewData["SearchQuery"]">
+        <button type="submit" style="display: none;"></button>
+        
+    </form>
+    <script>
+        function submitForm() {
+            var searchQuery = document.getElementById('search').value;
+            var entriesPerPage = document.getElementById('entriesPerPage').value;
+            var url = window.location.pathname + '?searchQuery=' + searchQuery + '&entriesPerPage=' + entriesPerPage;
+            window.location.href = url;
+        }
+    </script>
+
     <!-- Entries per page toggle -->
-    <div class="form-group">
-        <label for="entriesPerPage">Entries per page:</label>
-        <select class="form-control" id="entriesPerPage">
-            <option value="5">5</option>
-            <option value="10">10</option>
-            <option value="20">20</option>
-        </select>
-    </div>
+    @*   <div class="form-group">
+    <label for="entriesPerPage">Entries per page:</label>
+    <select class="form-control" id="entriesPerPage">
+    <option value="5">5</option>
+    <option value="10">10</option>
+    <option value="20">20</option>
+    </select>
+    </div> *@
 
     <!-- Search bar -->
-    <div class="form-group">
-        <label for="search">Search:</label>
-        <input type="text" class="form-control" id="search" placeholder="Search">
-    </div>
-
+    @*   <div class="form-group">
+    <label for="search">Search:</label>
+    <input type="text" class="form-control" id="search" placeholder="Search" oninput="performSearch()" />
+    </div> *@
 
 
     <table class="table">
@@ -78,9 +106,9 @@
                             <a onclick="showInPopup('@Url.Action("AddOrEdit","Employee",new {id=item.ID},Context.Request.Scheme)','Update Employee')" class="btn btn-info text-white"><i class="fas fa-pencil-alt"></i> Edit</a>
                             <a onclick="showInPopup('@Url.Action("Delete","Employee",new {id=item.ID},Context.Request.Scheme)','Delete Employee')" class="btn btn-danger text-white"><i class="fas fa-pencil-alt"></i> Delete</a>
                             @* <form asp-action="Delete" asp-route-id="@item.ID" onsubmit="return jQueryAjaxDelete(this)" class="d-inline">
-                                <input type="hidden" asp-for="@item.ID" />
-                                <input type="submit" value="Delete" class="btn btn-danger" />
-                            </form> *@
+                        <input type="hidden" asp-for="@item.ID" />
+                        <input type="submit" value="Delete" class="btn btn-danger" />
+                        </form> *@
                         </div>
                     </td>
                 </tr>
@@ -94,7 +122,8 @@
                 @for (var pge = pager.StartPage; pge <= pager.EndPage; pge++)
                 {
                     <li class="page-item @(pge == pager.CurrentPage ? "active" : "")">
-                        <a class="page-link" asp-controller="Employee" asp-action="Index" asp-route-pg="@pge">
+                        <a class="page-link" asp-controller="Employee" asp-action="Index" asp-route-pg="@pge" asp-route-entriesPerPage="@ViewData["EntriesPerPage"]"
+                           asp-route-searchQuery="@ViewData["SearchQuery"]">
                             @pge
                         </a>
                     </li>
@@ -105,16 +134,26 @@
     </div>
 </div>
 
-@* <script>
-    document.getElementById('entriesPerPage').addEventListener('change', function () {
-        var selectedValue = this.value;
-        var url = window.location.pathname + "?entriesPerPage=" + selectedValue;
-        window.location.href = url;
-    });
-</script>
- *@
 
 <script>
+
+    function performSearch() {
+        var searchText = document.getElementById('search').value.toLowerCase();
+        var rows = document.querySelectorAll('tbody tr');
+
+        for (var row of rows) {
+            var shouldHide = true;
+            var cells = row.getElementsByTagName('td');
+            for (var cell of cells) {
+                if (cell.textContent.toLowerCase().indexOf(searchText) > -1) {
+                    shouldHide = false;
+                    break;
+                }
+            }
+            row.style.display = shouldHide ? "none" : "";
+        }
+    }
+
     document.addEventListener("DOMContentLoaded", function () {
         var entriesPerPage = @((int)ViewData["EntriesPerPage"]);
         document.getElementById('entriesPerPage').value = entriesPerPage;

@@ -24,11 +24,32 @@ namespace EmployeeList_MVC.Controllers
             _context = context;
         }
 
-        // GET: Employee
-        public async Task<IActionResult> Index(int pg = 1, int entriesPerPage = 5)
+        [HttpGet]
+        public async Task<IActionResult> Search(string searchQuery, int entriesPerPage)
         {
-            var employees = await _context.Employees.ToListAsync();
-            //const int pageSize = 5;
+            
+            var employeesQuery = _context.Employees.AsQueryable();
+
+            if (searchQuery != "")
+            {
+                if (!string.IsNullOrEmpty(searchQuery))
+                {
+                    employeesQuery = employeesQuery.Where(e =>
+                        EF.Functions.Like(e.FirstName, $"%{searchQuery}%") ||
+                        EF.Functions.Like(e.LastName, $"%{searchQuery}%") ||
+                        EF.Functions.Like(e.Email, $"%{searchQuery}%"));
+                }
+            }
+
+            //var employees = await employeesQuery.Take(entriesPerPage).ToListAsync();
+            var employees = await employeesQuery.ToListAsync();
+
+            if (entriesPerPage > 0)
+            {
+                ViewData["EntriesPerPage"] = entriesPerPage;
+            }
+
+            int pg = 1;
             if (pg < 1)
             {
                 pg = 1;
@@ -43,6 +64,82 @@ namespace EmployeeList_MVC.Controllers
             // Store the entriesPerPage in ViewData for access in the view
             ViewData["EntriesPerPage"] = entriesPerPage;
 
+            return View("_ViewAll", data);
+
+        }
+
+
+
+        //[HttpGet]
+        //public async Task<IActionResult> Search(string searchQuery, int entriesPerPage)
+        //{
+        //    var employeesQuery = _context.Employees.AsQueryable();
+
+        //    if (!string.IsNullOrEmpty(searchQuery))
+        //    {
+        //        employeesQuery = employeesQuery.Where(e =>
+        //            EF.Functions.Like(e.FirstName, $"%{searchQuery}%") ||
+        //            EF.Functions.Like(e.LastName, $"%{searchQuery}%") ||
+        //            EF.Functions.Like(e.Email, $"%{searchQuery}%")
+        //        );
+        //    }
+
+        //    var employees = await employeesQuery.Take(entriesPerPage).ToListAsync();
+
+        //    int pg = 1;
+        //    if (pg < 1)
+        //    {
+        //        pg = 1;
+        //    }
+        //    int pageSize = entriesPerPage;
+        //    int recsCount = employees.Count;
+        //    var pager = new Pager(recsCount, pg, pageSize);
+        //    int recSkip = (pg - 1) * pageSize;
+        //    var data = employees.Skip(recSkip).Take(pager.PageSize).ToList();
+        //    this.ViewBag.Pager = pager;
+
+        //    // Store the entriesPerPage in ViewData for access in the view
+        //    ViewData["EntriesPerPage"] = entriesPerPage;
+
+        //    return View("_ViewAll", data);
+
+        //    //return PartialView("_EmployeeSearchResults", data);
+        //}
+
+        // GET: Employee
+        public async Task<IActionResult> Index(int pg = 1, int entriesPerPage = 5, string searchQuery = "")
+        {
+            var employees = await _context.Employees.ToListAsync();
+
+            // Apply search filter if searchQuery is provided
+            if (!string.IsNullOrEmpty(searchQuery))
+            {
+                IQueryable<Employee> employeesQuery = _context.Employees.AsQueryable();
+                employeesQuery = employeesQuery.Where(e =>
+                    EF.Functions.Like(e.FirstName, $"%{searchQuery}%") ||
+                    EF.Functions.Like(e.LastName, $"%{searchQuery}%") ||
+                    EF.Functions.Like(e.Email, $"%{searchQuery}%"));
+
+                employees = await employeesQuery.ToListAsync();
+            }
+            
+
+            //const int pageSize = 5;
+            if (pg < 1)
+            {
+                pg = 1;
+            }
+            int pageSize = entriesPerPage;
+            int recsCount = employees.Count;
+            var pager = new Pager(recsCount, pg, pageSize);
+            int recSkip = (pg - 1) * pageSize;
+            var data = employees.Skip(recSkip).Take(pager.PageSize).ToList();
+            this.ViewBag.Pager = pager;
+
+            // Store the entriesPerPage in ViewData for access in the view
+            ViewData["EntriesPerPage"] = entriesPerPage;
+            ViewData["SearchQuery"] = searchQuery;
+            
             return View(data);
             //return View(await _context.Employees.ToListAsync());
         }
@@ -52,6 +149,9 @@ namespace EmployeeList_MVC.Controllers
         [NoDirectAccess]
         public async Task<IActionResult> AddOrEdit(int id = 0)
         {
+            // Store the entriesPerPage in ViewData for access in the view
+            ViewData["EntriesPerPage"] = 5;
+
             if (id == 0)
                 return View(new Employee());
             else
@@ -72,6 +172,9 @@ namespace EmployeeList_MVC.Controllers
         {
             if (ModelState.IsValid)
             {
+                // Store the entriesPerPage in ViewData for access in the view
+                ViewData["EntriesPerPage"] = 5;
+
                 //Insert
                 if (id == 0)
                 {
@@ -119,6 +222,9 @@ namespace EmployeeList_MVC.Controllers
         //GET: Employee/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            // Store the entriesPerPage in ViewData for access in the view
+            ViewData["EntriesPerPage"] = 5;
+
             if (id == null)
             {
                 return NotFound();
@@ -139,6 +245,9 @@ namespace EmployeeList_MVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            // Store the entriesPerPage in ViewData for access in the view
+            ViewData["EntriesPerPage"] = 5;
+
             var EmployeeModel = await _context.Employees.FindAsync(id);
             _context.Employees.Remove(EmployeeModel);
             await _context.SaveChangesAsync();
