@@ -25,9 +25,22 @@ namespace EmployeeList_MVC.Controllers
         }
 
         // GET: Employee
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int pg = 1)
         {
-            return View(await _context.Employees.ToListAsync());
+            var employees = await _context.Employees.ToListAsync();
+            const int pageSize = 5;
+            if (pg < 1)
+            {
+                pg = 1;
+            }
+
+            int recsCount = employees.Count;
+            var pager = new Pager(recsCount, pg, pageSize);
+            int recSkip = (pg - 1) * pageSize;
+            var data = employees.Skip(recSkip).Take(pager.PageSize).ToList();
+            this.ViewBag.Pager = pager;
+            return View(data);
+            //return View(await _context.Employees.ToListAsync());
         }
 
         // GET: Employee/AddOrEdit(Insert)
