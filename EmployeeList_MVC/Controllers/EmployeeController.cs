@@ -25,20 +25,24 @@ namespace EmployeeList_MVC.Controllers
         }
 
         // GET: Employee
-        public async Task<IActionResult> Index(int pg = 1)
+        public async Task<IActionResult> Index(int pg = 1, int entriesPerPage = 5)
         {
             var employees = await _context.Employees.ToListAsync();
-            const int pageSize = 5;
+            //const int pageSize = 5;
             if (pg < 1)
             {
                 pg = 1;
             }
-
+            int pageSize = entriesPerPage;
             int recsCount = employees.Count;
             var pager = new Pager(recsCount, pg, pageSize);
             int recSkip = (pg - 1) * pageSize;
             var data = employees.Skip(recSkip).Take(pager.PageSize).ToList();
             this.ViewBag.Pager = pager;
+
+            // Store the entriesPerPage in ViewData for access in the view
+            ViewData["EntriesPerPage"] = entriesPerPage;
+
             return View(data);
             //return View(await _context.Employees.ToListAsync());
         }

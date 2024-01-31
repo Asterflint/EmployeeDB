@@ -19,6 +19,23 @@
 
     <h1 class="text-center"><i class="fas fa-comments-dollar text-success"></i> Employee History</h1>
 
+    <!-- Entries per page toggle -->
+    <div class="form-group">
+        <label for="entriesPerPage">Entries per page:</label>
+        <select class="form-control" id="entriesPerPage">
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="20">20</option>
+        </select>
+    </div>
+
+    <!-- Search bar -->
+    <div class="form-group">
+        <label for="search">Search:</label>
+        <input type="text" class="form-control" id="search" placeholder="Search">
+    </div>
+
+
 
     <table class="table">
         <thead class="thead-light">
@@ -87,3 +104,25 @@
         }
     </div>
 </div>
+
+@* <script>
+    document.getElementById('entriesPerPage').addEventListener('change', function () {
+        var selectedValue = this.value;
+        var url = window.location.pathname + "?entriesPerPage=" + selectedValue;
+        window.location.href = url;
+    });
+</script>
+ *@
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var entriesPerPage = @((int)ViewData["EntriesPerPage"]);
+        document.getElementById('entriesPerPage').value = entriesPerPage;
+    });
+
+    document.getElementById('entriesPerPage').addEventListener('change', function () {
+        var selectedValue = this.value;
+        var url = window.location.pathname + "?entriesPerPage=" + selectedValue;
+        window.location.href = url;
+    });
+</script>
