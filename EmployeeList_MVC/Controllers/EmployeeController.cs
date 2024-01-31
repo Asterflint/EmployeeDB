@@ -138,7 +138,23 @@ namespace EmployeeList_MVC.Controllers
             var EmployeeModel = await _context.Employees.FindAsync(id);
             _context.Employees.Remove(EmployeeModel);
             await _context.SaveChangesAsync();
-            return Json(new { html = Helper.RenderRazorViewToString(this, "_ViewAll", _context.Employees.ToList()) });
+
+            var employees = await _context.Employees.ToListAsync();
+            const int pageSize = 5;
+            int pg = 1;
+            if (pg < 1)
+            {
+                pg = 1;
+            }
+
+            int recsCount = employees.Count;
+            var pager = new Pager(recsCount, pg, pageSize);
+            int recSkip = (pg - 1) * pageSize;
+            var data = employees.Skip(recSkip).Take(pager.PageSize).ToList();
+            this.ViewBag.Pager = pager;
+            return View("_ViewAll", data);
+
+            //return Json(new { html = Helper.RenderRazorViewToString(this, "_ViewAll",data) });
         }
 
         private bool EmployeeModelExists(int id)

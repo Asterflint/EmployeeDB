@@ -59,10 +59,11 @@
                     <td>
                         <div>
                             <a onclick="showInPopup('@Url.Action("AddOrEdit","Employee",new {id=item.ID},Context.Request.Scheme)','Update Employee')" class="btn btn-info text-white"><i class="fas fa-pencil-alt"></i> Edit</a>
-                            <form asp-action="Delete" asp-route-id="@item.ID" onsubmit="return jQueryAjaxDelete(this)" class="d-inline">
+                            <a onclick="showInPopup('@Url.Action("Delete","Employee",new {id=item.ID},Context.Request.Scheme)','Delete Employee')" class="btn btn-danger text-white"><i class="fas fa-pencil-alt"></i> Delete</a>
+                            @* <form asp-action="Delete" asp-route-id="@item.ID" onsubmit="return jQueryAjaxDelete(this)" class="d-inline">
                                 <input type="hidden" asp-for="@item.ID" />
                                 <input type="submit" value="Delete" class="btn btn-danger" />
-                            </form>
+                            </form> *@
                         </div>
                     </td>
                 </tr>
