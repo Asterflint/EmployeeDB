@@ -53,7 +53,7 @@ namespace EmployeeList_MVC.Controllers
             if (ModelState.IsValid)
             {
                 //Insert
-                if (id == 0 || DepartmentModel.ID == 0)
+                if (id == 0 )
                 {
                     
                     _context.Add(DepartmentModel);

@@ -15,7 +15,7 @@
                         @Html.DisplayNameFor(model => model.Abbreviation)
                     </th>
                     <th>
-                        <a onclick="showInPopup('@Url.Action("AddOrEdit","Department",null,Context.Request.Scheme)','New Department')" class="btn btn-success text-white"><i class="fas fa-random"></i> New Department</a>
+                    <a onclick="showInPopup('@Url.Action("AddOrEdit","Department",new {id=0},Context.Request.Scheme)','New Department')" class="btn btn-success text-white"><i class="fas fa-random"></i> New Department</a>
                     </th>
                 </tr>
             </thead>
