@@ -62,7 +62,6 @@ namespace EmployeeList_MVC.Controllers
         }
 
 
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddOrEdit(int id, [Bind("ID,NIK,FirstName,LastName,Email")] Employee EmployeeModel)
@@ -93,12 +92,27 @@ namespace EmployeeList_MVC.Controllers
                         { throw; }
                     }
                 }
-                return Json(new { isValid = true, html = Helper.RenderRazorViewToString(this, "_ViewAll", _context.Employees.ToList()) });
+
+                var employees =  _context.Employees.ToList();
+                const int pageSize = 5;
+                int pg = 1;
+                if (pg < 1)
+                {
+                    pg = 1;
+                }
+
+                int recsCount = employees.Count;
+                var pager = new Pager(recsCount, pg, pageSize);
+                int recSkip = (pg - 1) * pageSize;
+                var data = employees.Skip(recSkip).Take(pager.PageSize).ToList();
+                this.ViewBag.Pager = pager;
+
+                return Json(new { isValid = true, html = Helper.RenderRazorViewToString(this, "_ViewAll", data) });
             }
             return Json(new { isValid = false, html = Helper.RenderRazorViewToString(this, "AddOrEdit", EmployeeModel) });
         }
 
-        // GET: Employee/Delete/5
+        //GET: Employee/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
