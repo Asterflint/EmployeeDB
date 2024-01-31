@@ -1,0 +1,45 @@
+﻿@model IEnumerable<EmployeeList_MVC.Models.Department>
+
+    <div class="col-md-8 offset-md-2">
+
+        <h1 class="text-center"><i class="fas fa-comments-dollar text-success"></i> Department History</h1>
+
+
+        <table class="table">
+            <thead class="thead-light">
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.DepartmentName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Abbreviation)
+                    </th>
+                    <th>
+                        <a onclick="showInPopup('@Url.Action("AddOrEdit","Department",null,Context.Request.Scheme)','New Department')" class="btn btn-success text-white"><i class="fas fa-random"></i> New Department</a>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                        @Html.DisplayFor(modelItem => item.DepartmentName)
+                        </td>
+                        <td>
+                        @Html.DisplayFor(modelItem => item.Abbreviation)
+                        </td>
+                        <td>
+                            <div>
+                            <a onclick="showInPopup('@Url.Action("AddOrEdit","Department",new {id=item.ID},Context.Request.Scheme)','Update Department')" class="btn btn-info text-white"><i class="fas fa-pencil-alt"></i> Edit</a>
+                                <form asp-action="Delete" asp-route-id="@item.ID" onsubmit="return jQueryAjaxDelete(this)" class="d-inline">
+                                <input type="hidden" asp-for="@item.ID" />
+                                    <input type="submit" value="Delete" class="btn btn-danger" />
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>

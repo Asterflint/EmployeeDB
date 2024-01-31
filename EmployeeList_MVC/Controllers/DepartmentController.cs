@@ -8,59 +8,55 @@ using Microsoft.EntityFrameworkCore;
 using EmployeeList_MVC.Models;
 using static EmployeeList_MVC.Helper;
 using EmployeeList_MVC;
+using System.Data.Entity.Infrastructure;
 using EmployeeList_MVC.Data;
-using EmployeeList_MVC.Data;
-using EmployeeList_MVC;
-using static EmployeeList_MVC.Helper;
 
 namespace EmployeeList_MVC.Controllers
 {
-    public class EmployeeController : Controller
+    public class DepartmentController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public EmployeeController(ApplicationDbContext context)
+        public DepartmentController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Employee
+        // GET: Department
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Employees.ToListAsync());
+            return View(await _context.Departments.ToListAsync());
         }
 
-        // GET: Employee/AddOrEdit(Insert)
-        // GET: Employee/AddOrEdit/5(Update)
+        // GET: Department/AddOrEdit(Insert)
+        // GET: Department/AddOrEdit/5(Update)
         [NoDirectAccess]
         public async Task<IActionResult> AddOrEdit(int id = 0)
         {
             if (id == 0)
-                return View(new Employee());
+                return View(new Department());
             else
             {
-                var EmployeeModel = await _context.Employees.FindAsync(id);
-                if (EmployeeModel == null)
+                var DepartmentModel = await _context.Departments.FindAsync(id);
+                if (DepartmentModel == null)
                 {
                     return NotFound();
                 }
-                return View(EmployeeModel);
+                return View(DepartmentModel);
             }
         }
 
-
-
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddOrEdit(int id, [Bind("ID,FirstName,LastName,Email")] Employee EmployeeModel)
+        public async Task<IActionResult> AddOrEdit(int id, [Bind("ID,DepartmentName,Abbreviation")] Department DepartmentModel)
         {
             if (ModelState.IsValid)
             {
                 //Insert
-                if (id == 0)
+                if (id == 0 || DepartmentModel.ID == 0)
                 {
-                    //EmployeeModel.Date = DateTime.Now;
-                    _context.Add(EmployeeModel);
+                    
+                    _context.Add(DepartmentModel);
                     await _context.SaveChangesAsync();
 
                 }
@@ -69,23 +65,23 @@ namespace EmployeeList_MVC.Controllers
                 {
                     try
                     {
-                        _context.Update(EmployeeModel);
+                        _context.Update(DepartmentModel);
                         await _context.SaveChangesAsync();
                     }
                     catch (System.Data.Entity.Infrastructure.DbUpdateConcurrencyException)
                     {
-                        if (!EmployeeModelExists(EmployeeModel.ID))
+                        if (!DepartmentModelExists(DepartmentModel.ID))
                         { return NotFound(); }
                         else
                         { throw; }
                     }
                 }
-                return Json(new { isValid = true, html = Helper.RenderRazorViewToString(this, "_ViewAll", _context.Employees.ToList()) });
+                return Json(new { isValid = true, html = Helper.RenderRazorViewToString(this, "_ViewAll", _context.Departments.ToList()) });
             }
-            return Json(new { isValid = false, html = Helper.RenderRazorViewToString(this, "AddOrEdit", EmployeeModel) });
+            return Json(new { isValid = false, html = Helper.RenderRazorViewToString(this, "AddOrEdit", DepartmentModel) });
         }
 
-        // GET: Employee/Delete/5
+        // GET: Department/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -93,30 +89,30 @@ namespace EmployeeList_MVC.Controllers
                 return NotFound();
             }
 
-            var EmployeeModel = await _context.Employees
+            var DepartmentModel = await _context.Departments
                 .FirstOrDefaultAsync(m => m.ID == id);
-            if (EmployeeModel == null)
+            if (DepartmentModel == null)
             {
                 return NotFound();
             }
 
-            return View(EmployeeModel);
+            return View(DepartmentModel);
         }
 
-        // POST: Employee/Delete/5
+        // POST: Department/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var EmployeeModel = await _context.Employees.FindAsync(id);
-            _context.Employees.Remove(EmployeeModel);
+            var DepartmentModel = await _context.Departments.FindAsync(id);
+            _context.Departments.Remove(DepartmentModel);
             await _context.SaveChangesAsync();
-            return Json(new { html = Helper.RenderRazorViewToString(this, "_ViewAll", _context.Employees.ToList()) });
+            return Json(new { html = Helper.RenderRazorViewToString(this, "_ViewAll", _context.Departments.ToList()) });
         }
 
-        private bool EmployeeModelExists(int id)
+        private bool DepartmentModelExists(int id)
         {
-            return _context.Employees.Any(e => e.ID == id);
+            return _context.Departments.Any(e => e.ID == id);
         }
     }
 }
