@@ -52,7 +52,7 @@ namespace EmployeeList_MVC.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddOrEdit(int id, [Bind("ID,FirstName,LastName,Email")] Employee EmployeeModel)
+        public async Task<IActionResult> AddOrEdit(int id, [Bind("ID,NIK,FirstName,LastName,Email")] Employee EmployeeModel)
         {
             if (ModelState.IsValid)
             {

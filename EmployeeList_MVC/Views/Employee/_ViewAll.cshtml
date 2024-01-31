@@ -1,51 +1,57 @@
 ﻿@model IEnumerable<EmployeeList_MVC.Models.Employee>
 
-    <div class="col-md-8 offset-md-2">
+<div class="col-md-8 offset-md-2">
 
-        <h1 class="text-center"><i class="fas fa-comments-dollar text-success"></i> Employee History</h1>
+    <h1 class="text-center"><i class="fas fa-comments-dollar text-success"></i> Employee History</h1>
 
 
-        <table class="table">
-            <thead class="thead-light">
+    <table class="table">
+        <thead class="thead-light">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.NIK)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.LastName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Email)
+                </th>
+                <th>
+                    <a onclick="showInPopup('@Url.Action("AddOrEdit","Employee",new {id=0},Context.Request.Scheme)','New Employee')" class="btn btn-success text-white"><i class="fas fa-random"></i> New Employee</a>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
                 <tr>
-                    <th>
-                        @Html.DisplayNameFor(model => model.FirstName)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.LastName)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Email)
-                    </th>
-                    <th>
-                        <a onclick="showInPopup('@Url.Action("AddOrEdit","Employee",null,Context.Request.Scheme)','New Employee')" class="btn btn-success text-white"><i class="fas fa-random"></i> New Employee</a>
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model)
-                {
-                    <tr>
-                        <td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NIK)
+                    </td>
+                    <td>
                         @Html.DisplayFor(modelItem => item.FirstName)
-                        </td>
-                        <td>
+                    </td>
+                    <td>
                         @Html.DisplayFor(modelItem => item.LastName)
-                        </td>
-                        <td>
+                    </td>
+                    <td>
                         @Html.DisplayFor(modelItem => item.Email)
-                        </td>
-                        <td>
-                            <div>
+                    </td>
+                    <td>
+                        <div>
                             <a onclick="showInPopup('@Url.Action("AddOrEdit","Employee",new {id=item.ID},Context.Request.Scheme)','Update Employee')" class="btn btn-info text-white"><i class="fas fa-pencil-alt"></i> Edit</a>
-                                <form asp-action="Delete" asp-route-id="@item.ID" onsubmit="return jQueryAjaxDelete(this)" class="d-inline">
+                            <form asp-action="Delete" asp-route-id="@item.ID" onsubmit="return jQueryAjaxDelete(this)" class="d-inline">
                                 <input type="hidden" asp-for="@item.ID" />
-                                    <input type="submit" value="Delete" class="btn btn-danger" />
-                                </form>
-                            </div>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
+                                <input type="submit" value="Delete" class="btn btn-danger" />
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
