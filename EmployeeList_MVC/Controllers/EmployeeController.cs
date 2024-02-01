@@ -97,7 +97,7 @@ namespace EmployeeList_MVC.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddOrEdit(int id, [Bind("ID,NIK,FirstName,LastName,Email,JobTitleID,HireDate")] Employee EmployeeModel)
+        public async Task<IActionResult> AddOrEdit(int id, [Bind("ID,NIK,FirstName,LastName,Email,JobTitleID,HireDate,Gender,DateOfBirth,PlaceOfBirth,Address,Phone")] Employee EmployeeModel)
         {
             if (ModelState.IsValid)
             {
@@ -129,7 +129,13 @@ namespace EmployeeList_MVC.Controllers
                     }
                 }
 
-                var employees = _context.Employees.ToList();
+                //var employees = _context.Employees.ToList();
+
+                IQueryable<Employee> employeesQuery = _context.Employees.Include(e => e.JobTitle).ThenInclude(jt => jt.Department); // This includes the Department related to the JobTitle
+
+                var employees = await employeesQuery.ToListAsync();
+
+
                 const int pageSize = 5;
                 int pg = 1;
                 if (pg < 1)
