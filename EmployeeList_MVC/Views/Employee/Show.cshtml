@@ -1,0 +1,99 @@
+﻿@model EmployeeList_MVC.Models.Employee
+
+
+@{
+    Layout = null;
+}
+
+
+<div class="row">
+    <div class="col-md-12">
+        <h4>Employee Information</h4>
+        <hr />
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <strong><label asp-for="NIK" class="control-label"></label></strong>
+                    <p >@Model.NIK</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <strong><label asp-for="FirstName" class="control-label"></label></strong>
+                    <p >@Model.FirstName</p>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <strong><label asp-for="LastName" class="control-label"></label></strong>
+                    <p >@Model.LastName</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <strong>Email</strong>
+                    <p>@Model.Email</p>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <strong>Department</strong>
+                    <p>@Model.JobTitle.Department.DepartmentName</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <strong>Job Title</strong>
+                    <p>@Model.JobTitle.JobTitleName</p>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <strong><label asp-for="Gender" class="control-label"></label></strong>
+                    <p >@Model.Gender</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <strong><label asp-for="PlaceOfBirth" class="control-label"></label></strong>
+                    <p >@Model.PlaceOfBirth</p>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <strong><label asp-for="DateOfBirth" class="control-label"></label></strong>
+                    <p >@Model.DateOfBirth?.ToString("d MMMM yyyy")</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <strong><label asp-for="HireDate" class="control-label"></label></strong>
+                    <p >@Model.HireDate?.ToString("d MMMM yyyy")</p>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <strong><label asp-for="Address" class="control-label"></label></strong>
+                    <p >@Model.Address</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <strong><label asp-for="Phone" class="control-label"></label></strong>
+                    <p >@Model.Phone</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

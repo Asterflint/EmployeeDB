@@ -109,6 +109,7 @@
 
                     <td>
                         <div>
+                            <a onclick="showInPopup('@Url.Action("Show","Employee",new {id=item.ID},Context.Request.Scheme)','Show Employee')" class="btn btn-success text-white"><i class="fas fa-pencil-alt"></i> Show</a>
                             <a onclick="showInPopup('@Url.Action("AddOrEdit","Employee",new {id=item.ID},Context.Request.Scheme)','Update Employee')" class="btn btn-info text-white"><i class="fas fa-pencil-alt"></i> Edit</a>
                             <a onclick="showInPopup('@Url.Action("Delete","Employee",new {id=item.ID},Context.Request.Scheme)','Delete Employee')" class="btn btn-danger text-white"><i class="fas fa-pencil-alt"></i> Delete</a>
                           

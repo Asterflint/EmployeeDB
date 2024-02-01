@@ -30,6 +30,29 @@ namespace EmployeeList_MVC.Controllers
             return Json(jobTitleList);
         }
 
+        // GET: Employee/Show/5
+        public async Task<IActionResult> Show(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+           
+            var employee = await _context.Employees
+            .Include(e => e.JobTitle)
+            .ThenInclude(jt => jt.Department)
+            .FirstOrDefaultAsync(m => m.ID == id);
+
+            //var employee = employees.FirstOrDefaultAsync(m => m.ID == id);
+
+            if (employee == null)
+            {
+                return NotFound();
+            }
+
+            return View(employee);
+        }
 
         public async Task<IActionResult> Index(int pg = 1, int entriesPerPage = 5, string searchQuery = "")
         {
