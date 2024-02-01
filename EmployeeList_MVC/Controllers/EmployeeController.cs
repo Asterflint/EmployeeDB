@@ -175,7 +175,7 @@ namespace EmployeeList_MVC.Controllers
                     //EmployeeModel.Date = DateTime.Now;
                     _context.Add(EmployeeModel);
                     await _context.SaveChangesAsync();
-
+                    TempData["success"] = "Employee created successfully";
                 }
                 //Update
                 else
@@ -184,6 +184,7 @@ namespace EmployeeList_MVC.Controllers
                     {
                         _context.Update(EmployeeModel);
                         await _context.SaveChangesAsync();
+                        TempData["success"] = "Employee updated successfully";
                     }
                     catch (System.Data.Entity.Infrastructure.DbUpdateConcurrencyException)
                     {
@@ -323,6 +324,7 @@ namespace EmployeeList_MVC.Controllers
             var EmployeeModel = await _context.Employees.FindAsync(id);
             _context.Employees.Remove(EmployeeModel);
             await _context.SaveChangesAsync();
+            TempData["success"] = "Employee deleted successfully";
 
             var employees = await _context.Employees.ToListAsync();
             const int pageSize = 5;
