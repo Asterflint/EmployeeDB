@@ -56,6 +56,7 @@ namespace EmployeeList_MVC.Controllers
 
         public async Task<IActionResult> Index(int pg = 1, int entriesPerPage = 5, string searchQuery = "")
         {
+            
             var jobTitles = _context.JobTitles.ToList();
             ViewData["JobTitles"] = new SelectList(jobTitles, "ID", "JobTitleName");
 
