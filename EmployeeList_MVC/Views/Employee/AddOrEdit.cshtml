@@ -63,7 +63,9 @@
                                         @if (department.Selected == true)
                                         {
                                             <option value="@department.Value" selected="selected">@department.Text</option>
-                                        }else{
+                                        }
+                                        else
+                                        {
                                             <option value="@department.Value">@department.Text</option>
 
                                         }
@@ -71,10 +73,11 @@
 
                                 }
 
-                              
+
                             }
-                            <span asp-validation-for="JobTitleID" class="text-danger"></span>
                         </select>
+                        <span id="departmentWarning" class="text-danger" style="display: none;">Please choose a department.</span>
+
                     </div>
                 </div>
                 <div class="col-md-6">
@@ -150,12 +153,28 @@
             </div>
             <div class="form-group">
                 <div class="col-md-6 offset-md-3">
-                    <input type="submit" value="Submit" class="btn btn-primary btn-block" />
+                    <input type="submit" value="Submit" id="submitBtn" class="btn btn-primary btn-block" />
                 </div>
             </div>
         </form>
     </div>
 </div>
+
+<script>
+    $(document).ready(function () {
+        $('#submitBtn').click(function () {
+            var selectedValue = $('#DepartmentID').val();
+            if (selectedValue === '') {
+                $('#departmentWarning').show();
+                return false; // To prevent form submission
+            } else {
+                $('#departmentWarning').hide();
+                // Any other action you may want to perform on successful selection
+            }
+        });
+    });
+</script>
+
 
 <script>
     $('#DepartmentID').change(function () {
