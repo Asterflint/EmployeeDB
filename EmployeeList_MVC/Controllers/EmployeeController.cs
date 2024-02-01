@@ -26,7 +26,7 @@ namespace EmployeeList_MVC.Controllers
             var jobTitles = _context.JobTitles.ToList();
             ViewData["JobTitles"] = new SelectList(jobTitles, "ID", "JobTitleName");
 
-            IQueryable<Employee> employeesQuery = _context.Employees.Include(e => e.JobTitle);
+            IQueryable<Employee> employeesQuery = _context.Employees.Include(e => e.JobTitle).ThenInclude(jt => jt.Department); // This includes the Department related to the JobTitle
 
             // Apply search filter if searchQuery is provided
             if (!string.IsNullOrEmpty(searchQuery))

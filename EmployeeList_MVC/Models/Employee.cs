@@ -39,7 +39,7 @@ namespace EmployeeList_MVC.Models
         public int? JobTitleID { get; set; }
 
         [ForeignKey("JobTitleID")]
-        public virtual JobTitle? JobTitle { get; set; }
+        public virtual JobTitle? JobTitle { get; set; }       
 
         public DateTime? HireDate { get; set; }
     }

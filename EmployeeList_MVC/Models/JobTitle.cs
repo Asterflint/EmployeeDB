@@ -11,7 +11,9 @@ namespace EmployeeList_MVC.Models
         public int ID { get; set; }
         [MaxLength(255)]
         public string JobTitleName { get; set; }
-        [ForeignKey("Department")]
         public int DepartmentID { get; set; }
+
+        [ForeignKey("DepartmentID")]
+        public virtual Department? Department { get; set; }
     }
 }
