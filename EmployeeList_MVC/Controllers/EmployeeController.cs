@@ -95,8 +95,6 @@ namespace EmployeeList_MVC.Controllers
         [NoDirectAccess]
         public async Task<IActionResult> AddOrEdit(int id = 0)
         {
-            var jobTitles = _context.JobTitles.ToList();
-            ViewData["JobTitles"] = new SelectList(jobTitles, "ID", "JobTitleName");
 
             var department = _context.Departments.ToList();
             ViewData["Departments"] = new SelectList(department, "ID", "DepartmentName");
@@ -108,7 +106,14 @@ namespace EmployeeList_MVC.Controllers
                 return View(new Employee());
             else
             {
-                var EmployeeModel = await _context.Employees.FindAsync(id);
+                var jobTitles = _context.JobTitles.ToList();
+                ViewData["JobTitles"] = new SelectList(jobTitles, "ID", "JobTitleName");
+
+                var EmployeeModel = await _context.Employees
+                .Include(e => e.JobTitle)
+                .ThenInclude(jt => jt.Department)
+                .FirstOrDefaultAsync(e => e.ID == id);
+
                 if (EmployeeModel == null)
                 {
                     return NotFound();
@@ -122,11 +127,17 @@ namespace EmployeeList_MVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddOrEdit(int id, [Bind("ID,NIK,FirstName,LastName,Email,JobTitleID,HireDate,Gender,DateOfBirth,PlaceOfBirth,Address,Phone")] Employee EmployeeModel)
         {
+            
+            var department = _context.Departments.ToList();
+            ViewData["Departments"] = new SelectList(department, "ID", "DepartmentName");
+
+            // Store the entriesPerPage in ViewData for access in the view
+            ViewData["EntriesPerPage"] = 5;
+
+           
             if (ModelState.IsValid)
             {
-                // Store the entriesPerPage in ViewData for access in the view
-                ViewData["EntriesPerPage"] = 5;
-
+              
                 //Insert
                 if (id == 0)
                 {
@@ -174,6 +185,7 @@ namespace EmployeeList_MVC.Controllers
 
                 return Json(new { isValid = true, html = Helper.RenderRazorViewToString(this, "_ViewAll", data) });
             }
+
             return Json(new { isValid = false, html = Helper.RenderRazorViewToString(this, "AddOrEdit", EmployeeModel) });
         }
 
