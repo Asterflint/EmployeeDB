@@ -10,7 +10,13 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-table@1.18.3/dist/bootstrap-table.min.css" rel="stylesheet">
-
+    <style>
+        /* Style for highlighted navigation */
+        .highlighted {
+            font-weight: bold;
+            color: red; /* You can change the color as per your design */
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -63,7 +69,17 @@
             $('table').bootstrapTable();
         });
     </script>
-
+    <script>
+        $(function () {
+            // Add active class to the navigation link of the current page
+            var path = window.location.pathname;
+            $('ul.navbar-nav a').each(function () {
+                if ($(this).attr('href') === path) {
+                    $(this).addClass('highlighted');
+                }
+            });
+        });
+    </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
