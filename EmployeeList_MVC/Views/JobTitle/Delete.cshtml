@@ -1,15 +1,15 @@
-﻿@model EmployeeList_MVC.Models.Department
+﻿@model EmployeeList_MVC.Models.JobTitle
 @{
     Layout = null;
 }
 
 
 <div>
-    <h3>Delete Department</h3>
+    <h3>Delete Job Title</h3>
 
     <p>
-        Are you sure you want to delete the department data of
-        <span style="font-weight:bold"> @Html.DisplayFor(model => model.DepartmentName)?</span>
+        Are you sure you want to delete the employee data of
+        <span style="font-weight:bold"> @Html.DisplayFor(model => model.JobTitleName)?</span>
     </p>
 
     <hr />
@@ -18,5 +18,5 @@
         <input type="hidden" asp-for="@Model.ID" />
         <input type="submit" value="Delete" class="btn btn-danger" />
     </form>
-
+ 
 </div>

@@ -20,7 +20,7 @@
 
 <div class="col-12 table-responsive">
 
-    <h1 class="text-center"><i class="fas fa-comments-dollar text-success"></i> Employee History</h1>
+    <h1 class="text-center"><i class="fas fa-comments-dollar text-success"></i> Employee Directory</h1>
 
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
         <div>
@@ -79,9 +79,9 @@
                 <th data-field="FirstName" data-sortable="true">First Name</th>
                 <th data-field="LastName" data-sortable="true">Last Name</th>
                 <th data-field="Email" data-sortable="true">Email</th>
-                <th data-field="JobTitle.JobTitleName" data-sortable="true">JobTitle</th>
                 <th data-field="JobTitle.Department.DepartmentName" data-sortable="true">Department</th>
-                <th data-field="HireDate" data-sortable="true">HireDate</th>
+                <th data-field="JobTitle.JobTitleName" data-sortable="true">Job Title</th>
+                <th data-field="HireDate" data-sortable="true">Hire Date</th>
                 <th>
                     <a onclick="showInPopup('@Url.Action("AddOrEdit","Employee",new {id=0},Context.Request.Scheme)','New Employee')" class="btn btn-success text-white"><i class="fas fa-random"></i> New Employee</a>
                 </th>
@@ -106,15 +106,14 @@
                         @Html.DisplayFor(modelItem => item.Email)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.JobTitle.JobTitleName)
+                        @Html.DisplayFor(modelItem => item.JobTitle.Department.DepartmentName)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.JobTitle.Department.DepartmentName)
+                        @Html.DisplayFor(modelItem => item.JobTitle.JobTitleName)
                     </td>
                     <td>
                         @item.HireDate?.ToString("d MMMM yyyy")
                     </td>
-
                     <td>
                         <div>
                             <a onclick="showInPopup('@Url.Action("Show","Employee",new {id=item.ID},Context.Request.Scheme)','Show Employee')" class="btn btn-sm btn-success text-white"><i class="fas fa-pencil-alt"></i> Show</a>
