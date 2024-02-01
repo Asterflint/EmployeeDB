@@ -1,5 +1,6 @@
 ﻿#nullable enable
 using System;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -16,9 +17,11 @@ namespace EmployeeList_MVC.Models
 
         [Required]
         [MaxLength(20)]
+        [DisplayName("First Name")]
         public string? FirstName { get; set; }
         [Required]
         [MaxLength(20)]
+        [DisplayName("Last Name")]
         public string? LastName { get; set; }
         [Required]
         [MaxLength(255)]
@@ -29,9 +32,11 @@ namespace EmployeeList_MVC.Models
 
         [Required]
         [MaxLength(100)]
+        [DisplayName("Place of Birth")]
         public string? PlaceOfBirth { get; set; }
 
         [Required]
+        [DisplayName("Date of Birth")]
         public DateTime? DateOfBirth { get; set; }
 
         [MaxLength(128)]
@@ -44,11 +49,14 @@ namespace EmployeeList_MVC.Models
         public string? Phone { get; set; }
 
         [Required]
+        [DisplayName("Job Title")]
         public int? JobTitleID { get; set; }
 
         [ForeignKey("JobTitleID")]
         public virtual JobTitle? JobTitle { get; set; }
+
         [Required]
+        [DisplayName("Hire Date")]
         public DateTime? HireDate { get; set; }
     }
 }

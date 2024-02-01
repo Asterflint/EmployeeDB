@@ -9,7 +9,9 @@ namespace EmployeeList_MVC.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ID { get; set; }
+        [Required]
         [MaxLength(255)]
+        [DisplayName("Department Name")]
         public string DepartmentName { get; set; }
         [MaxLength(10)]
         public string Abbreviation { get; set; }

@@ -9,8 +9,12 @@ namespace EmployeeList_MVC.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ID { get; set; }
+        [Required]
         [MaxLength(255)]
+        [DisplayName("Job Title")]
         public string JobTitleName { get; set; }
+        [Required]
+        [DisplayName("Department")]
         public int DepartmentID { get; set; }
 
         [ForeignKey("DepartmentID")]
