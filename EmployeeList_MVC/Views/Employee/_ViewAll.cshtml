@@ -81,6 +81,9 @@
                     @Html.DisplayNameFor(model => model.Email)
                 </th>
                 <th>
+                    @Html.DisplayNameFor(model => model.JobTitle.JobTitleName)
+                </th>
+                <th>
                     <a onclick="showInPopup('@Url.Action("AddOrEdit","Employee",new {id=0},Context.Request.Scheme)','New Employee')" class="btn btn-success text-white"><i class="fas fa-random"></i> New Employee</a>
                 </th>
             </tr>
@@ -100,6 +103,9 @@
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Email)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.JobTitle.JobTitleName)
                     </td>
                     <td>
                         <div>

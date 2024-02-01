@@ -36,8 +36,10 @@ namespace EmployeeList_MVC.Models
         [MaxLength(20)]
         public string? Phone { get; set; }
 
-        [ForeignKey("JobTitle")]
         public int? JobTitleID { get; set; }
+
+        [ForeignKey("JobTitleID")]
+        public virtual JobTitle? JobTitle { get; set; }
 
         public DateTime? HireDate { get; set; }
     }

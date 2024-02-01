@@ -26,20 +26,19 @@ namespace EmployeeList_MVC.Controllers
             var jobTitles = _context.JobTitles.ToList();
             ViewData["JobTitles"] = new SelectList(jobTitles, "ID", "JobTitleName");
 
-            var employees = await _context.Employees.ToListAsync();
+            IQueryable<Employee> employeesQuery = _context.Employees.Include(e => e.JobTitle);
 
             // Apply search filter if searchQuery is provided
             if (!string.IsNullOrEmpty(searchQuery))
             {
-                IQueryable<Employee> employeesQuery = _context.Employees.AsQueryable();
                 employeesQuery = employeesQuery.Where(e =>
                     EF.Functions.Like(e.FirstName, $"%{searchQuery}%") ||
                     EF.Functions.Like(e.LastName, $"%{searchQuery}%") ||
                     EF.Functions.Like(e.Email, $"%{searchQuery}%"));
 
-                employees = await employeesQuery.ToListAsync();
             }
-            
+
+            var employees = await employeesQuery.ToListAsync();
 
             //const int pageSize = 5;
             if (pg < 1)
@@ -56,13 +55,10 @@ namespace EmployeeList_MVC.Controllers
             // Store the entriesPerPage in ViewData for access in the view
             ViewData["EntriesPerPage"] = entriesPerPage;
             ViewData["SearchQuery"] = searchQuery;
-            
+
             return View(data);
-            //return View(await _context.Employees.ToListAsync());
         }
 
-        // GET: Employee/AddOrEdit(Insert)
-        // GET: Employee/AddOrEdit/5(Update)
         [NoDirectAccess]
         public async Task<IActionResult> AddOrEdit(int id = 0)
         {
@@ -120,7 +116,7 @@ namespace EmployeeList_MVC.Controllers
                     }
                 }
 
-                var employees =  _context.Employees.ToList();
+                var employees = _context.Employees.ToList();
                 const int pageSize = 5;
                 int pg = 1;
                 if (pg < 1)
