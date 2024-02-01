@@ -21,22 +21,41 @@
 
     <h1 class="text-center"><i class="fas fa-comments-dollar text-success"></i> JobTitle History</h1>
 
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+        <div>
+            <label for="entriesPerPage">Entries per page:</label>
+            <select class="form-control" id="entriesPerPage" name="entriesPerPage" onchange="submitForm()">
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="20">20</option>
+            </select>
+        </div>
 
-    <table class="table">
+        <div>
+            <form id="searchForm" asp-controller="JobTitle" asp-action="Index" method="get">
+                <div class="form-group">
+                    <label for="search">Search:</label>
+                    <input type="text" class="form-control" id="search" name="searchQuery" placeholder="Search" value="@ViewData["SearchQuery"]">
+                </div>
+                <input type="hidden" name="searchQuery" value="@ViewData["SearchQuery"]">
+                <button type="submit" style="display: none;"></button>
+            </form>
+        </div>
+    </div>
+
+    <table class="table" data-toggle="table" data-sortable="true" data-search="false">
         <thead class="thead-light">
             <tr>
+                <th data-field="JobTitleName" data-sortable="true">Job Title</th>
+                <th data-field="JobTitle.Department.DepartmentName" data-sortable="true">Department</th>
                 <th>
-                    @Html.DisplayNameFor(model => model.JobTitleName)
+                    <a onclick="showInPopup('@Url.Action("AddOrEdit","JobTitle",new {id=0},Context.Request.Scheme)','New Employee')" class="btn btn-success text-white"><i class="fas fa-random"></i> New Employee</a>
                 </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Department.DepartmentName)
-                </th>
-                <th>
-                    <a onclick="showInPopup('@Url.Action("AddOrEdit","JobTitle",new {id=0},Context.Request.Scheme)','New JobTitle')" class="btn btn-success text-white"><i class="fas fa-random"></i> New JobTitle</a>
-                </th>
+                <!-- Additional th elements for other columns -->
             </tr>
         </thead>
         <tbody>
+            <!-- Table body content -->
             @foreach (var item in Model)
             {
                 <tr>
@@ -48,11 +67,9 @@
                     </td>
                     <td>
                         <div>
-                            <a onclick="showInPopup('@Url.Action("AddOrEdit","JobTitle",new {id=item.ID},Context.Request.Scheme)','Update JobTitle')" class="btn btn-info text-white"><i class="fas fa-pencil-alt"></i> Edit</a>
-                            <form asp-action="Delete" asp-route-id="@item.ID" onsubmit="return jQueryAjaxDelete(this)" class="d-inline">
-                                <input type="hidden" asp-for="@item.ID" />
-                                <input type="submit" value="Delete" class="btn btn-danger" />
-                            </form>
+                            <a onclick="showInPopup('@Url.Action("AddOrEdit","JobTitle",new {id=item.ID},Context.Request.Scheme)','Update JobTitle')" class="btn btn-sm btn-info text-white"><i class="fas fa-pencil-alt"></i> Edit</a>
+                            <a onclick="showInPopup('@Url.Action("Delete","JobTitle",new {id=item.ID},Context.Request.Scheme)','Delete JobTitle')" class="btn btn-sm btn-danger text-white"><i class="fas fa-pencil-alt"></i> Delete</a>
+
                         </div>
                     </td>
                 </tr>
@@ -81,6 +98,15 @@
 
 
 <script>
+    function submitForm() {
+        var searchQuery = document.getElementById('search').value;
+        var entriesPerPage = document.getElementById('entriesPerPage').value;
+        var url = window.location.pathname + '?searchQuery=' + searchQuery + '&entriesPerPage=' + entriesPerPage;
+        window.location.href = url;
+    }
+</script>
+
+<script>
 
     function performSearch() {
         var searchText = document.getElementById('search').value.toLowerCase();
@@ -104,9 +130,9 @@
         document.getElementById('entriesPerPage').value = entriesPerPage;
     });
 
-    document.getElementById('entriesPerPage').addEventListener('change', function () {
-        var selectedValue = this.value;
-        var url = window.location.pathname + "?entriesPerPage=" + selectedValue;
-        window.location.href = url;
-    });
+    // document.getElementById('entriesPerPage').addEventListener('change', function () {
+    //     var selectedValue = this.value;
+    //     var url = window.location.pathname + "?entriesPerPage=" + selectedValue;
+    //     window.location.href = url;
+    // });
 </script>
