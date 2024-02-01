@@ -99,6 +99,7 @@ namespace EmployeeList_MVC.Controllers
             var department = _context.Departments.ToList();
             ViewData["Departments"] = new SelectList(department, "ID", "DepartmentName");
 
+           
             // Store the entriesPerPage in ViewData for access in the view
             ViewData["EntriesPerPage"] = 5;
 
@@ -114,10 +115,23 @@ namespace EmployeeList_MVC.Controllers
                 .ThenInclude(jt => jt.Department)
                 .FirstOrDefaultAsync(e => e.ID == id);
 
+
                 if (EmployeeModel == null)
                 {
                     return NotFound();
                 }
+                else
+                {
+                    var jobTitleID = EmployeeModel.JobTitleID;
+                    var selectedJobTitle = _context.JobTitles.FirstOrDefault(j => j.ID == EmployeeModel.JobTitleID);
+                    var selectedDepartment = selectedJobTitle != null ? _context.Departments.FirstOrDefault(d => d.ID == selectedJobTitle.DepartmentID) : null;
+
+                    // Create SelectList objects based on the extracted information
+                    ViewData["Departments"] = new SelectList(department, "ID", "DepartmentName", selectedDepartment?.ID);
+                    ViewData["JobTitles"] = new SelectList(jobTitles, "ID", "JobTitleName", selectedJobTitle?.ID);
+
+                }
+
                 return View(EmployeeModel);
             }
         }
@@ -127,14 +141,16 @@ namespace EmployeeList_MVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddOrEdit(int id, [Bind("ID,NIK,FirstName,LastName,Email,JobTitleID,HireDate,Gender,DateOfBirth,PlaceOfBirth,Address,Phone")] Employee EmployeeModel)
         {
-            
+            // Populate Dropdowns
             var department = _context.Departments.ToList();
             ViewData["Departments"] = new SelectList(department, "ID", "DepartmentName");
+
+            var jobTitles = _context.JobTitles.ToList();
+            ViewData["JobTitles"] = new SelectList(jobTitles, "ID", "JobTitleName");
 
             // Store the entriesPerPage in ViewData for access in the view
             ViewData["EntriesPerPage"] = 5;
 
-           
             if (ModelState.IsValid)
             {
               
@@ -169,6 +185,13 @@ namespace EmployeeList_MVC.Controllers
 
                 var employees = await employeesQuery.ToListAsync();
 
+                var jobTitleID = EmployeeModel.JobTitleID;
+                var selectedJobTitle = _context.JobTitles.FirstOrDefault(j => j.ID == EmployeeModel.JobTitleID);
+                var selectedDepartment = selectedJobTitle != null ? _context.Departments.FirstOrDefault(d => d.ID == selectedJobTitle.DepartmentID) : null;
+
+                // Create SelectList objects based on the extracted information
+                ViewData["Departments"] = new SelectList(department, "ID", "DepartmentName", selectedDepartment?.ID);
+                ViewData["JobTitles"] = new SelectList(jobTitles, "ID", "JobTitleName", selectedJobTitle?.ID);
 
                 const int pageSize = 5;
                 int pg = 1;
@@ -184,6 +207,45 @@ namespace EmployeeList_MVC.Controllers
                 this.ViewBag.Pager = pager;
 
                 return Json(new { isValid = true, html = Helper.RenderRazorViewToString(this, "_ViewAll", data) });
+            }
+            else
+            {
+
+                if (id != 0)
+                {
+                    var existingEmployee = await _context.Employees
+                     .Include(e => e.JobTitle)
+                         .ThenInclude(jt => jt.Department)
+                     .FirstOrDefaultAsync(e => e.ID == id);
+
+                    // Check if the existing employee is found
+                    if (existingEmployee != null)
+                    {
+                        // copy the department and job title data from the existing employee to the new model
+                        EmployeeModel.JobTitle = existingEmployee.JobTitle;
+
+                        var jobTitleID = existingEmployee.JobTitleID;
+                        var selectedJobTitle = _context.JobTitles.FirstOrDefault(j => j.ID == existingEmployee.JobTitleID);
+                        var selectedDepartment = selectedJobTitle != null ? _context.Departments.FirstOrDefault(d => d.ID == selectedJobTitle.DepartmentID) : null;
+
+                        // Create SelectList objects based on the extracted information
+                        ViewData["Departments"] = new SelectList(department, "ID", "DepartmentName", selectedDepartment?.ID);
+                        ViewData["JobTitles"] = new SelectList(jobTitles, "ID", "JobTitleName", selectedJobTitle?.ID);
+                    }
+                }
+                else
+                {
+                    var existingEmployee = EmployeeModel;
+                    // Assuming department and jobTitles are already populated
+                    var jobTitleID = existingEmployee.JobTitleID;
+                    var selectedJobTitle = _context.JobTitles.FirstOrDefault(j => j.ID == existingEmployee.JobTitleID);
+                    var selectedDepartment = selectedJobTitle != null ? _context.Departments.FirstOrDefault(d => d.ID == selectedJobTitle.DepartmentID) : null;
+
+                    // Create SelectList objects based on the extracted information
+                    ViewData["Departments"] = new SelectList(department, "ID", "DepartmentName", selectedDepartment?.ID);
+                    ViewData["JobTitles"] = new SelectList(jobTitles, "ID", "JobTitleName", selectedJobTitle?.ID);
+                }
+
             }
 
             return Json(new { isValid = false, html = Helper.RenderRazorViewToString(this, "AddOrEdit", EmployeeModel) });
