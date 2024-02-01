@@ -68,8 +68,15 @@ namespace EmployeeList_MVC.Controllers
                 employeesQuery = employeesQuery.Where(e =>
                     EF.Functions.Like(e.FirstName, $"%{searchQuery}%") ||
                     EF.Functions.Like(e.LastName, $"%{searchQuery}%") ||
-                    EF.Functions.Like(e.Email, $"%{searchQuery}%"));
-
+                    EF.Functions.Like(e.Email, $"%{searchQuery}%") ||
+                    EF.Functions.Like(e.NIK, $"%{searchQuery}%") ||
+                    EF.Functions.Like(e.JobTitle.JobTitleName, $"%{searchQuery}%") ||
+                    //EF.Functions.Like(e.Address, $"%{searchQuery}%") ||
+                    //EF.Functions.Like(e.Gender.ToString(), $"%{searchQuery}%") ||
+                    //EF.Functions.Like(e.DateOfBirth.ToString(), $"%{searchQuery}%") ||
+                    //EF.Functions.Like(e.Phone, $"%{searchQuery}%") ||
+                    //EF.Functions.Like(Convert.ToDateTime(e.HireDate).ToString("d MMMM yyyy"), $"%{searchQuery}%") ||
+                    EF.Functions.Like(e.JobTitle.Department.DepartmentName, $"%{searchQuery}%"));
             }
 
             var employees = await employeesQuery.ToListAsync();
