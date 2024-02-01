@@ -64,38 +64,25 @@
     <input type="text" class="form-control" id="search" placeholder="Search" oninput="performSearch()" />
     </div> *@
 
-
-    <table class="table">
+    <table class="table" data-toggle="table" data-sortable="true" data-search="false">
         <thead class="thead-light">
             <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.NIK)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.FirstName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.LastName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Email)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.JobTitle.JobTitleName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.JobTitle.Department.DepartmentName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.HireDate)
-                </th>
+                <th data-field="NIK" data-sortable="true">NIK</th>
+                <th data-field="FirstName" data-sortable="true">First Name</th>
+                <th data-field="LastName" data-sortable="true">Last Name</th>
+                <th data-field="Email" data-sortable="true">Email</th>
+                <th data-field="JobTitle.JobTitleName" data-sortable="true">JobTitle</th>
+                <th data-field="JobTitle.Department.DepartmentName" data-sortable="true">Department</th>
+                <th data-field="HireDate" data-sortable="true">HireDate</th>
                 <th>
                     <a onclick="showInPopup('@Url.Action("AddOrEdit","Employee",new {id=0},Context.Request.Scheme)','New Employee')" class="btn btn-success text-white"><i class="fas fa-random"></i> New Employee</a>
                 </th>
+                <!-- Additional th elements for other columns -->
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model)
+            <!-- Table body content -->
+             @foreach (var item in Model)
             {
                 <tr>
                     <td>
@@ -124,16 +111,14 @@
                         <div>
                             <a onclick="showInPopup('@Url.Action("AddOrEdit","Employee",new {id=item.ID},Context.Request.Scheme)','Update Employee')" class="btn btn-info text-white"><i class="fas fa-pencil-alt"></i> Edit</a>
                             <a onclick="showInPopup('@Url.Action("Delete","Employee",new {id=item.ID},Context.Request.Scheme)','Delete Employee')" class="btn btn-danger text-white"><i class="fas fa-pencil-alt"></i> Delete</a>
-                            @* <form asp-action="Delete" asp-route-id="@item.ID" onsubmit="return jQueryAjaxDelete(this)" class="d-inline">
-                        <input type="hidden" asp-for="@item.ID" />
-                        <input type="submit" value="Delete" class="btn btn-danger" />
-                        </form> *@
+                          
                         </div>
                     </td>
                 </tr>
             }
         </tbody>
     </table>
+
     <div class="container">
         @if (pager.TotalPages > 0)
         {
