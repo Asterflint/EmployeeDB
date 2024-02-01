@@ -21,6 +21,16 @@ namespace EmployeeList_MVC.Controllers
             _context = context;
         }
 
+        [HttpGet]
+        public IActionResult GetJobTitlesForDepartment(int departmentID)
+        {
+            var jobTitles = _context.JobTitles.Where(j => j.DepartmentID == departmentID).ToList();
+            var jobTitleList = jobTitles.Select(j => new { value = j.ID, text = j.JobTitleName });
+
+            return Json(jobTitleList);
+        }
+
+
         public async Task<IActionResult> Index(int pg = 1, int entriesPerPage = 5, string searchQuery = "")
         {
             var jobTitles = _context.JobTitles.ToList();
@@ -64,6 +74,9 @@ namespace EmployeeList_MVC.Controllers
         {
             var jobTitles = _context.JobTitles.ToList();
             ViewData["JobTitles"] = new SelectList(jobTitles, "ID", "JobTitleName");
+
+            var department = _context.Departments.ToList();
+            ViewData["Departments"] = new SelectList(department, "ID", "DepartmentName");
 
             // Store the entriesPerPage in ViewData for access in the view
             ViewData["EntriesPerPage"] = 5;

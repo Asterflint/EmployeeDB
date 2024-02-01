@@ -40,11 +40,30 @@
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
+                        <label>Select Department</label>
+                        <select id="DepartmentID" class="form-control">
+                            <option value="">-- Please choose --</option>
+                            @foreach (var department in ViewBag.Departments)
+                            {
+                                <option value="@department.Value">@department.Text</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
                         <label asp-for="JobTitleID" class="control-label"></label>
-                        <select asp-for="JobTitleID" class="form-control" asp-items="ViewBag.JobTitles"></select>
+                        <select asp-for="JobTitleID" class="form-control">
+                            <option value="">-- Please choose --</option>
+                            @foreach (var jobTitle in ViewBag.JobTitles)
+                            {
+                                <option value="@jobTitle.Value">@jobTitle.Text</option>
+                            }
+                        </select>
                         <span asp-validation-for="JobTitleID" class="text-danger"></span>
                     </div>
                 </div>
+
                 <!-- Input for HireDate -->
                 <div class="col-md-6">
                     <div class="form-group">
@@ -62,3 +81,22 @@
         </form>
     </div>
 </div>
+
+<script>
+    $('#DepartmentID').change(function () {
+        var departmentID = $(this).val();
+        $.ajax({
+            url: '/Employee/GetJobTitlesForDepartment',
+            data: { departmentID: departmentID },
+            success: function (data) {
+                // Clear the JobTitle dropdown
+                $('#JobTitleID').empty();
+
+                // Populate the JobTitle dropdown with the returned options
+                $.each(data, function (index, item) {
+                    $('#JobTitleID').append('<option value="' + item.value + '">' + item.text + '</option>');
+                });
+            }
+        });
+    });
+</script>
