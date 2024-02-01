@@ -18,11 +18,33 @@
 }
 
 
-<div class="col-md-8 offset-md-2">
+<div class="col-12 table-responsive">
 
     <h1 class="text-center"><i class="fas fa-comments-dollar text-success"></i> Employee History</h1>
 
-    <form id="searchForm" asp-controller="Employee" asp-action="Index" method="get">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+        <div>
+            <label for="entriesPerPage">Entries per page:</label>
+            <select class="form-control" id="entriesPerPage" name="entriesPerPage" onchange="submitForm()">
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="20">20</option>
+            </select>
+        </div>
+
+        <div>
+            <form id="searchForm" asp-controller="Employee" asp-action="Index" method="get">
+                <div class="form-group">
+                    <label for="search">Search:</label>
+                    <input type="text" class="form-control" id="search" name="searchQuery" placeholder="Search" value="@ViewData["SearchQuery"]">
+                </div>
+                <input type="hidden" name="searchQuery" value="@ViewData["SearchQuery"]">
+                <button type="submit" style="display: none;"></button>
+            </form>
+        </div>
+    </div>
+
+   @*  <form id="searchForm" asp-controller="Employee" asp-action="Index" method="get">
         <div class="form-group">
             <label for="search">Search:</label>
             <input type="text" class="form-control" id="search" name="searchQuery" placeholder="Search" value="@ViewData["SearchQuery"]">
@@ -38,7 +60,7 @@
         <input type="hidden" name="searchQuery" value="@ViewData["SearchQuery"]">
         <button type="submit" style="display: none;"></button>
         
-    </form>
+    </form> *@
     <script>
         function submitForm() {
             var searchQuery = document.getElementById('search').value;
@@ -48,21 +70,7 @@
         }
     </script>
 
-    <!-- Entries per page toggle -->
-    @*   <div class="form-group">
-    <label for="entriesPerPage">Entries per page:</label>
-    <select class="form-control" id="entriesPerPage">
-    <option value="5">5</option>
-    <option value="10">10</option>
-    <option value="20">20</option>
-    </select>
-    </div> *@
-
-    <!-- Search bar -->
-    @*   <div class="form-group">
-    <label for="search">Search:</label>
-    <input type="text" class="form-control" id="search" placeholder="Search" oninput="performSearch()" />
-    </div> *@
+  
 
     <table class="table" data-toggle="table" data-sortable="true" data-search="false">
         <thead class="thead-light">
@@ -109,9 +117,9 @@
 
                     <td>
                         <div>
-                            <a onclick="showInPopup('@Url.Action("Show","Employee",new {id=item.ID},Context.Request.Scheme)','Show Employee')" class="btn btn-success text-white"><i class="fas fa-pencil-alt"></i> Show</a>
-                            <a onclick="showInPopup('@Url.Action("AddOrEdit","Employee",new {id=item.ID},Context.Request.Scheme)','Update Employee')" class="btn btn-info text-white"><i class="fas fa-pencil-alt"></i> Edit</a>
-                            <a onclick="showInPopup('@Url.Action("Delete","Employee",new {id=item.ID},Context.Request.Scheme)','Delete Employee')" class="btn btn-danger text-white"><i class="fas fa-pencil-alt"></i> Delete</a>
+                            <a onclick="showInPopup('@Url.Action("Show","Employee",new {id=item.ID},Context.Request.Scheme)','Show Employee')" class="btn btn-sm btn-success text-white"><i class="fas fa-pencil-alt"></i> Show</a>
+                            <a onclick="showInPopup('@Url.Action("AddOrEdit","Employee",new {id=item.ID},Context.Request.Scheme)','Update Employee')" class="btn btn-sm btn-info text-white"><i class="fas fa-pencil-alt"></i> Edit</a>
+                            <a onclick="showInPopup('@Url.Action("Delete","Employee",new {id=item.ID},Context.Request.Scheme)','Delete Employee')" class="btn btn-sm btn-danger text-white"><i class="fas fa-pencil-alt"></i> Delete</a>
                           
                         </div>
                     </td>
