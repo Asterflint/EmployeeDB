@@ -136,8 +136,15 @@ namespace EmployeeList_MVC.Controllers
 
                     // Create SelectList objects based on the extracted information
                     ViewData["Departments"] = new SelectList(department, "ID", "DepartmentName", selectedDepartment?.ID);
-                    ViewData["JobTitles"] = new SelectList(jobTitles, "ID", "JobTitleName", selectedJobTitle?.ID);
-
+                    //ViewData["JobTitles"] = new SelectList(jobTitles, "ID", "JobTitleName", selectedJobTitle?.ID);
+                    if (selectedDepartment == null)
+                    {
+                        ViewData["JobTitles"] = new SelectList(new List<SelectListItem>(), "Value", "Text");
+                    }
+                    else
+                    {
+                        ViewData["JobTitles"] = new SelectList(jobTitles, "ID", "JobTitleName", selectedJobTitle?.ID);
+                    }
                 }
 
                 return View(EmployeeModel);
@@ -152,9 +159,9 @@ namespace EmployeeList_MVC.Controllers
             // Populate Dropdowns
             var department = _context.Departments.ToList();
             ViewData["Departments"] = new SelectList(department, "ID", "DepartmentName");
-
             var jobTitles = _context.JobTitles.ToList();
             ViewData["JobTitles"] = new SelectList(jobTitles, "ID", "JobTitleName");
+
 
             // Store the entriesPerPage in ViewData for access in the view
             ViewData["EntriesPerPage"] = 5;
@@ -199,7 +206,15 @@ namespace EmployeeList_MVC.Controllers
 
                 // Create SelectList objects based on the extracted information
                 ViewData["Departments"] = new SelectList(department, "ID", "DepartmentName", selectedDepartment?.ID);
-                ViewData["JobTitles"] = new SelectList(jobTitles, "ID", "JobTitleName", selectedJobTitle?.ID);
+                //ViewData["JobTitles"] = new SelectList(jobTitles, "ID", "JobTitleName", selectedJobTitle?.ID);
+                if (selectedDepartment == null)
+                {
+                    ViewData["JobTitles"] = new SelectList(new List<SelectListItem>(), "Value", "Text");
+                }
+                else
+                {
+                    ViewData["JobTitles"] = new SelectList(jobTitles, "ID", "JobTitleName", selectedJobTitle?.ID);
+                }
 
                 const int pageSize = 5;
                 int pg = 1;
@@ -238,7 +253,15 @@ namespace EmployeeList_MVC.Controllers
 
                         // Create SelectList objects based on the extracted information
                         ViewData["Departments"] = new SelectList(department, "ID", "DepartmentName", selectedDepartment?.ID);
-                        ViewData["JobTitles"] = new SelectList(jobTitles, "ID", "JobTitleName", selectedJobTitle?.ID);
+                        //ViewData["JobTitles"] = new SelectList(jobTitles, "ID", "JobTitleName", selectedJobTitle?.ID);
+                        if (selectedDepartment == null)
+                        {
+                            ViewData["JobTitles"] = new SelectList(new List<SelectListItem>(), "Value", "Text");
+                        }
+                        else
+                        {
+                            ViewData["JobTitles"] = new SelectList(jobTitles, "ID", "JobTitleName", selectedJobTitle?.ID);
+                        }
                     }
                 }
                 else
@@ -251,7 +274,16 @@ namespace EmployeeList_MVC.Controllers
 
                     // Create SelectList objects based on the extracted information
                     ViewData["Departments"] = new SelectList(department, "ID", "DepartmentName", selectedDepartment?.ID);
-                    ViewData["JobTitles"] = new SelectList(jobTitles, "ID", "JobTitleName", selectedJobTitle?.ID);
+                    //ViewData["JobTitles"] = new SelectList(jobTitles, "ID", "JobTitleName", selectedJobTitle?.ID);
+
+                    if (selectedDepartment == null)
+                    {
+                        ViewData["JobTitles"] = new SelectList(new List<SelectListItem>(), "Value", "Text");
+                    }
+                    else
+                    {
+                        ViewData["JobTitles"] = new SelectList(jobTitles, "ID", "JobTitleName", selectedJobTitle?.ID);
+                    }
                 }
 
             }
